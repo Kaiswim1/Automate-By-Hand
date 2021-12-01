@@ -11,6 +11,9 @@ dictionary={}
 x=0
 i=0
 root=None
+app=None
+nameChange=False
+button_dict = {}
  
 listOfBT = []
 s = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM)
@@ -58,6 +61,8 @@ def start():
     #print(dictionary)
 
 
+#When we stop, it saves the dictionary to a pickle,
+#TODO: save it to a text file
 def stop():
     global sc
     global stp
@@ -145,15 +150,53 @@ def openControllerUI():
     root.mainloop()
 
 
+
+def onRightClick(event):
+    global name
+    global app
+    name = tk.StringVar()
+    print(button_dict[0].cget('text'))
+    rc = Tk()
+    rc.title("Rename")
+    rc.geometry("180x160")
+    rc.resizable(True,True)
+    rc.configure(bg="#E7E7E7")
+    f = Frame(rc,width=250,height=250, bg="#2C2C2C")
+    f.grid(row=0,column=0,sticky="NW")
+    f.grid_propagate(0)
+    f.update()
+    l = Label(f,text="Rename to",bg='#DD8630',fg='white', font=('arial',18,'bold'))
+    l.place(x=95, y=15, width=200, height=35, anchor="center")
+    rename = tk.Entry(f, width = 15, textvariable = name)
+
+    def okay():
+        name = rename.get()
+        print(name)
+        app.update()
+        
+    print()
+
+    
+    rename.place(x=90, y=48, width=168, height=20, anchor="center")
+    ok=tk.Button(rc,text="OK", font=('arial',10,'bold'), borderwidth='0', height="2", width="6", command=okay)
+    ok.place(x=30+4, y=80)
+    cancel=tk.Button(rc,text="CANCEL", font=('arial',10,'bold'), borderwidth='0', height="2", width="6", command=rc.destroy)
+    cancel.place(x=90+4, y=80)
+    rc.mainloop()
+    
+    
+
+
 def scanUI(x):
+    global app
+    global button_dict
     app = Tk()
-    app.resizable(False, False)
+    app.resizable(False, True)
     
     f = Frame(app,width=250,height=250, bg="black")
     f.grid(row=0,column=0,sticky="NW")
     f.grid_propagate(0)
     f.update()
-    button_dict = {}
     by=66
     
     l = Label(f,text="Available Bluetooth",bg='#27BFB2',fg='white', font=('arial',18,'bold'))
@@ -164,8 +207,9 @@ def scanUI(x):
         print(language)
         s.connect((language, 1))
         print('connected')
-        app.destroy()
+        button
         openControllerUI()
+        
         
     
     for lang in x:
@@ -174,10 +218,17 @@ def scanUI(x):
         def action(x = lang): 
             return text_updation(x)
         
-    # create the buttons 
-        button_dict[lang] = Button(app, text = lang, command = action, font=('arial',10,'bold'))
-        button_dict[lang].place(x=58, y=by, width=130, height=20)
-        by = by+35
+    # create the buttons
+        if nameChange == False:
+            button_dict[lang] = Button(app, text = lang, command = action, font=('arial',10,'bold'))
+            button_dict[lang].place(x=58, y=by, width=130, height=20)
+            button_dict[lang].bind('<Button-3>',  onRightClick) 
+            by = by+35
+
+
+    app.mainloop()
+
+        
     
 scan()
 
