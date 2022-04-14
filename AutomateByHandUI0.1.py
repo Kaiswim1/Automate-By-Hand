@@ -25,11 +25,11 @@ def rled():
     if btn.config('text')[-1] == 'OFF RED':
         btn.config(text='ON RED')
         print(sc)
-        s.send(b'd')
+        s.send(b's') #stop
     else:
         btn.config(text='OFF RED')
         print(sc)
-        s.send(b'a')
+        s.send(b'f') #forward
 
 def start():
     global sc
@@ -42,8 +42,6 @@ def start():
     sc=sc+1
     lbl=Label(root, text='%i'%(sc), font=('arial',20,'bold'))
     if(stp==0):
-        if(sc > 1):
-            lbl.labelText = sc;
         if x==0: 
             lbl.after(30,start)
 
@@ -54,10 +52,10 @@ def start():
             print(dictionary.get(f[i]))
             if dictionary.get(f[i]) == "ON RED":
                #arduinoData.write(b'a')
-                s.send(b'a')
+                s.send(b's')
             if dictionary.get(f[i]) == "OFF RED":
                #arduinoData.write(b'b')
-                s.send(b'b')
+                s.send(b'f')
             i=i+1
     except IndexError as e:{
     }
@@ -82,9 +80,9 @@ def pause():
 def log():
     global sc
     if btn.config('text')[-1] == 'OFF RED':
-        dictionary[sc]=str(sc)
+        dictionary[sc]="ON RED"
     else:
-        dictionary[sc]=str(sc)
+        dictionary[sc]="OFF RED"
     return
 
 def reset():
