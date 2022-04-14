@@ -19,13 +19,16 @@ listOfBT = []
 s = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM)
 
 def rled():
+    global sc
     global stp
     log()
     if btn.config('text')[-1] == 'OFF RED':
         btn.config(text='ON RED')
+        print(sc)
         s.send(b'd')
     else:
         btn.config(text='OFF RED')
+        print(sc)
         s.send(b'a')
 
 def start():
@@ -39,10 +42,10 @@ def start():
     sc=sc+1
     lbl=Label(root, text='%i'%(sc), font=('arial',20,'bold'))
     if(stp==0):
-        #print(str(sc))
-        if x==0:
+        if(sc > 1):
+            lbl.labelText = sc;
+        if x==0: 
             lbl.after(30,start)
-        #lbl.place(x=95,y=90)
 
     f=list(dictionary)
     try:
@@ -50,9 +53,11 @@ def start():
         if lbl["text"] == str(f[i]) and len(dictionary)>0:
             print(dictionary.get(f[i]))
             if dictionary.get(f[i]) == "ON RED":
-               arduinoData.write(b'a')
+               #arduinoData.write(b'a')
+                s.send(b'a')
             if dictionary.get(f[i]) == "OFF RED":
-               arduinoData.write(b'b') 
+               #arduinoData.write(b'b')
+                s.send(b'b')
             i=i+1
     except IndexError as e:{
     }
@@ -77,9 +82,9 @@ def pause():
 def log():
     global sc
     if btn.config('text')[-1] == 'OFF RED':
-        dictionary[sc]="OFF RED"
+        dictionary[sc]=str(sc)
     else:
-        dictionary[sc]="ON RED"
+        dictionary[sc]=str(sc)
     return
 
 def reset():
@@ -109,6 +114,7 @@ def load():
     global stp
     #button3["state"] = DISABLED
     stp=0
+    start()
     f=list(dictionary)
     print(str(f[0]))
     print(len(dictionary))
@@ -207,7 +213,7 @@ def scanUI(x):
         print(language)
         s.connect((language, 1))
         print('connected')
-        button
+        #button
         openControllerUI()
         
         
@@ -231,18 +237,4 @@ def scanUI(x):
         
     
 scan()
-
-
-
-
-
-
-
-
-
-
-
-        
-
-
 
