@@ -4,12 +4,14 @@ from tkinter import*
 import tkinter as tk
 import serial
 import pickle
+import keyboard
 
 sc=0; stp=0
 lbl=None
 dictionary={}
 x=0
 i=0
+k=0 #KeyStroke disabler enables only when 0
 root=None
 app=None
 nameChange=False
@@ -17,6 +19,47 @@ button_dict = {}
  
 listOfBT = []
 s = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM)
+
+def rightPress():
+    global k
+    log()
+    if k == 0:
+        print('r')
+        s.send(b'r')
+        k=k+1
+
+
+def leftPress():
+    global k
+    log()
+    if k == 0:
+        print('r')
+        s.send(b'l')
+        k=k+1
+
+def upPress():
+    global k
+    log()
+    if k == 0:
+        print('u')
+        s.send(b'u')
+        k=k+1
+
+def downPress():
+    global k
+    log()
+    if k == 0:
+        print('u')
+        s.send(b'd')
+        k=k+1
+
+
+def stopKey():
+    global k
+    print('s')
+    log()
+    s.send(b's')
+    k=0
 
 def rled():
     global sc
@@ -145,6 +188,19 @@ def openControllerUI():
     button2=Button(root,text="Stop",command=stop)
     button3=Button(root,text="Load",command=load)
     btn=tk.Button(root,text="ON RED", font=('arial',10,'bold'), borderwidth='8', height="4", width="6", command=rled)
+    
+    keyboard.on_press_key("right", lambda _:rightPress())   
+    keyboard.on_release_key("right", lambda _:stopKey())
+
+    keyboard.on_press_key("up", lambda _:upPress())   
+    keyboard.on_release_key("up", lambda _:stopKey())
+
+    keyboard.on_press_key("left", lambda _:leftPress())   
+    keyboard.on_release_key("left", lambda _:stopKey())
+
+    keyboard.on_press_key("down", lambda _:downPress())   
+    keyboard.on_release_key("down", lambda _:stopKey())
+
     button4=Button(root,text="Reset",command=reset)
     button1.place(x=10,y=10)
     button2.place(x=100,y=10)
@@ -235,4 +291,3 @@ def scanUI(x):
         
     
 scan()
-
