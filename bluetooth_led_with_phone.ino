@@ -28,19 +28,42 @@ void loop() {
     Serial.println("Available"); 
     char data = BTSerial.read(); // reading the data received from the bluetooth module 
     Serial.println(data); 
-    if(data == 'f'){ //Forward
+    if(data == 'r'){ //right
       digitalWrite(IN1, HIGH);  
       digitalWrite(IN2, LOW);  
       digitalWrite(IN3, HIGH);  
       digitalWrite(IN4, LOW); 
       analogWrite(ENA, 185); 
       analogWrite(ENB, 185);     
+    }  
+    if(data == 'l'){
+      digitalWrite(IN1, LOW);  
+      digitalWrite(IN2, HIGH);  
+      digitalWrite(IN3, LOW);  
+      digitalWrite(IN4, HIGH); 
+      analogWrite(ENA, 185); 
+      analogWrite(ENB, 185);   
     } 
+    if(data == 'u'){
+      digitalWrite(IN1, HIGH);  
+      digitalWrite(IN2, LOW);  
+      digitalWrite(IN3, LOW);  
+      digitalWrite(IN4, HIGH); 
+      analogWrite(ENA, 185); 
+      analogWrite(ENB, 185);   
+    } 
+     if(data == 'd'){
+      digitalWrite(IN1, LOW);  
+      digitalWrite(IN2, HIGH);  
+      digitalWrite(IN3, HIGH);  
+      digitalWrite(IN4, LOW); 
+      analogWrite(ENA, 185); 
+      analogWrite(ENB, 185);   
+    }
     if(data == 's'){ //Stop
       analogWrite(ENA, 0); 
       analogWrite(ENB, 0); 
    }
 }
 }
-
          
