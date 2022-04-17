@@ -13,6 +13,7 @@ x=0
 i=0
 k=0 #KeyStroke disabler enables only when 0
 root=None
+loading=None
 app=None
 nameChange=False
 button_dict = {}
@@ -163,8 +164,20 @@ def load():
     if lbl["text"] == str(f[0]):
         print("Hello world")
 
+
+def loadingScreen():
+    global loading
+    loading = Tk()
+    img = PhotoImage(file='C:/Users/kaisw/Downloads/LoadingPageABH.png')
+    Label(loading,image=img).pack()
+    loading.overrideredirect(True)
+    loading.geometry("578x220+435+285")
+    loading.update()
+
 def scan():
+    global loading
     print("Scanning for bluetooth devices:")
+    loadingScreen()
     devices = bluetooth.discover_devices(lookup_names = True, lookup_class = True)
     number_of_devices = len(devices)
     print(number_of_devices,"devices found")
@@ -174,11 +187,15 @@ def scan():
         print(devices[i][0])
         i=i+1
     print(listOfBT)
+    loading.destroy()
     scanUI(listOfBT)
     return
+    
 
 def openControllerUI():
     global btn
+    global app
+    app.destroy()
     root=Tk()
     root.title("stopwatch")
     root.geometry("210x410")
