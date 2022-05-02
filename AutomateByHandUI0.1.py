@@ -23,7 +23,9 @@ s = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM
 
 def rightPress():
     global k
+    global sc
     log()
+    dictionary[sc]="right"
     if k == 0:
         print('r')
         s.send(b'r')
@@ -32,7 +34,9 @@ def rightPress():
 
 def leftPress():
     global k
-    log()
+    global sc
+    #log()
+    dictionary[sc]="left"
     if k == 0:
         print('r')
         s.send(b'l')
@@ -40,7 +44,9 @@ def leftPress():
 
 def upPress():
     global k
-    log()
+    global sc
+    #log()
+    dictionary[sc]="up"
     if k == 0:
         print('u')
         s.send(b'u')
@@ -48,7 +54,9 @@ def upPress():
 
 def downPress():
     global k
-    log()
+    global sc
+    #log()
+    dictionary[sc]="down"
     if k == 0:
         print('u')
         s.send(b'd')
@@ -58,7 +66,8 @@ def downPress():
 def stopKey():
     global k
     print('s')
-    log()
+    #log()
+    dictionary[sc]="stop"
     s.send(b's')
     k=0
 
@@ -66,7 +75,7 @@ def rled():
     global sc
     global stp
     log()
-    if btn.config('text')[-1] == 'OFF RED':
+    if btn.config('text')[-1] == 'forward':
         btn.config(text='ON RED')
         print(sc)
         s.send(b's') #stop
@@ -94,12 +103,18 @@ def start():
         #for i in f:
         if lbl["text"] == str(f[i]) and len(dictionary)>0:
             print(dictionary.get(f[i]))
-            if dictionary.get(f[i]) == "ON RED":
+            if dictionary.get(f[i]) == "stop":
                #arduinoData.write(b'a')
                 s.send(b's')
-            if dictionary.get(f[i]) == "OFF RED":
+            if dictionary.get(f[i]) == "up":
                #arduinoData.write(b'b')
-                s.send(b'f')
+                s.send(b'u')
+            if dictionary.get(f[i]) == "down":
+                s.send(b'd')
+            if dictionary.get(f[i]) == "left":
+                s.send(b'l')
+            if dictionary.get(f[i]) == "right":
+                s.send(b'r')
             i=i+1
     except IndexError as e:{
     }
@@ -176,7 +191,6 @@ def loadingScreen():
 
 def scan():
     global loading
-    print("Scanning for bluetooth devices:")
     loadingScreen()
     devices = bluetooth.discover_devices(lookup_names = True, lookup_class = True)
     number_of_devices = len(devices)
