@@ -31,23 +31,41 @@ def rightPress():
         s.send(b'r')
         k=k+1
 
+def right90():
+    global k
+    global sc
+    log()
+    dictionary[sc]="right90"
+    print('r90')
+    s.send(b'w')
+    
+
 
 def leftPress():
     global k
     global sc
     #log()
-    dictionary[sc]="left"
     if k == 0:
-        print('r')
+        dictionary[sc]="left"
+        print('l')
         s.send(b'l')
         k=k+1
+
+def left90():
+    global k
+    global sc
+    #log()
+    dictionary[sc]="left90"
+    print('l90')
+    s.send(b'q')
+    k=k+1
 
 def upPress():
     global k
     global sc
     #log()
-    dictionary[sc]="up"
     if k == 0:
+        dictionary[sc]="up"
         print('u')
         s.send(b'u')
         k=k+1
@@ -56,8 +74,8 @@ def downPress():
     global k
     global sc
     #log()
-    dictionary[sc]="down"
     if k == 0:
+        dictionary[sc]="down"
         print('u')
         s.send(b'd')
         k=k+1
@@ -115,6 +133,11 @@ def start():
                 s.send(b'l')
             if dictionary.get(f[i]) == "right":
                 s.send(b'r')
+            if dictionary.get(f[i]) == "left90":
+                s.send(b'q')
+            if dictionary.get(f[i]) == "right90":
+                s.send(b'w')
+            
             i=i+1
     except IndexError as e:{
     }
@@ -231,6 +254,9 @@ def openControllerUI():
 
     keyboard.on_press_key("down", lambda _:downPress())   
     keyboard.on_release_key("down", lambda _:stopKey())
+
+    keyboard.on_press_key("w", lambda _:right90())
+    keyboard.on_press_key("q", lambda _:left90())
 
     button4=Button(root,text="Reset",command=reset)
     button1.place(x=10,y=10)
